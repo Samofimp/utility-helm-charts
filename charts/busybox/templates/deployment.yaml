@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}
@@ -6,6 +6,9 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
   template:
     metadata:
       labels:
@@ -32,3 +35,10 @@ spec:
             - /dev/null
           initialDelaySeconds: 5
           periodSeconds: 5
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
